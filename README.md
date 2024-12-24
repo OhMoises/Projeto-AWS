@@ -14,9 +14,8 @@ Esté projeto consiste em rodar o WordPress em instancias EC2 da AWS, criando um
   ![VPC _ us-east-1 - Google Chrome 24_12_2024 11_17_40](https://github.com/user-attachments/assets/cdc24270-703b-41b1-9de3-cb63b6288b69)
 ## Passo 2: Criação do grupo de segurança
 - Na barra de busca no topo da página procure por grupo de segurança.
-- Clique em "Criar Grupo de Segurança, de um nome para o grupo de segurança, associe a VPC que criamos.
-- Regras de entradas vamos deixar tipo: SSH, protoloco: TCP, intervalo de portas: 22 e origem: Qualquer local-IPv4.
-- Regas de saída, tipo: Todo o tráfego, protoloco: Tudo, intervalo de portas: Tudo e destino: Qualquer local-IPv4.
+- Clique em "Criar Grupo de Segurança, vamos criar quatro grupos de segurança.
+- Um grupo para a EC2, um grupo para o RDS, um grupo para a EFS e um grupo para o LoadBalancer.
 
  ### Para o EC2:
 - Entrada 
@@ -37,13 +36,13 @@ Esté projeto consiste em rodar o WordPress em instancias EC2 da AWS, criando um
 
 ![VPC _ us-east-1 - Google Chrome 24_12_2024 14_25_31](https://github.com/user-attachments/assets/df71dab7-e98a-4b31-b858-f107c3ac3f28)
 
-
-
   ### Para o RDS MySql:
 - Entrada 
   | Tipo         | Protocolo|  Porta     |      Tipo de Origem         |
   |--------------|----------|------------|-----------------------------|
   | MySql/Aurora |    TCP   |   3306     | Grupo de Segurança da EC2   |
+
+![VPC _ us-east-1 - Google Chrome 24_12_2024 14_37_40](https://github.com/user-attachments/assets/d327b916-afe7-470e-b676-dfc60f482923)
 
   ### Para o EFS:
 - Entrada
@@ -51,17 +50,23 @@ Esté projeto consiste em rodar o WordPress em instancias EC2 da AWS, criando um
   |--------------|----------|------------|-----------------------------|
   |    NFS       |    TCP   |   2049     |  Grupo de Segurança da EC2  |
 
+![grupo-sg-EFS](https://github.com/user-attachments/assets/a59e5164-b242-4a33-b498-bb2f8d1afc36)
+
   ### Para o LoadBalancer:
 - Entrada
   | Tipo         | Protocolo|  Porta     |      Tipo de Origem         |
   |--------------|----------|------------|-----------------------------|
   |     HTTP     |    TCP   |    80      |         0.0.0.0/0           |
+
+![grupo-sg-LB](https://github.com/user-attachments/assets/3cafa8a7-2200-41c8-802a-f2bc1a9b7242)
+
 - Saída
   | Tipo         | Protocolo|  Porta     |      Tipo de Origem         |
   |--------------|----------|------------|-----------------------------|
   | Todo tráfego |   TCP    |   Tudo     |         0.0.0.0/0           |
   |    HTTP      |   TCP    |     80     | Grupo de Segurança da EC2   |
 
+![grupo-sg-LB-saida](https://github.com/user-attachments/assets/a25def72-f737-443b-8d04-626f5e3d26a4)
 
 ## Passo : Criar o banco de dados RDS
 - Na barra de busca no topo da página, digite "RDS" e selecione RDS na lista de serviços.
